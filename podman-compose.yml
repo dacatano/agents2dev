@@ -1,0 +1,35 @@
+version: "3.9"
+
+networks:
+  internal-net:
+    driver: bridge
+  internet-net:
+    driver: bridge
+
+services:
+
+  goose:
+    build:
+      context: ./agents/goose
+    image: local/agent-goose:0.1.0
+    container_name: goose
+    volumes:
+      - ./project:/workspace
+      - ./control-plane:/control-plane
+    networks:
+      - internal-net
+    mem_limit: 1g
+    cpus: 1.0
+
+  gemini:
+    build:
+      context: ./agents/gemini
+    image: local/agent-gemini:0.1.0
+    container_name: gemini
+    volumes:
+      - ./project:/workspace
+    networks:
+      - internal-net
+      - internet-net
+    mem_limit: 2g
+    cpus: 1.5
